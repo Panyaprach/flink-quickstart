@@ -22,6 +22,6 @@ module "flink" {
 #   }
 # }
 
-# module "prometheus" {
-#   source = "./prometheus"
-# }
+module "prometheus" {
+  source = "./prometheus"
+}
