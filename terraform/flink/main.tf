@@ -1,6 +1,6 @@
 resource "kubernetes_namespace" "flink_namespace" {
   metadata {
-    name = "flink"
+    name = var.namespace
   }
 }
 
@@ -11,7 +11,7 @@ resource "kubernetes_config_map" "flink_config" {
 
   metadata {
     name      = "flink-config"
-    namespace = "flink"
+    namespace = var.namespace
 
     labels = {
       app = "flink"
@@ -91,7 +91,7 @@ resource "kubernetes_service" "flink_jobmanager_rest" {
 
   metadata {
     name      = "flink-jobmanager-rest"
-    namespace = "flink"
+    namespace = var.namespace
   }
 
   spec {
@@ -116,10 +116,10 @@ resource "kubernetes_service" "flink_jobmanager" {
   depends_on = [
     "kubernetes_deployment.flink_jobmanager"
   ]
-  
+
   metadata {
     name      = "flink-jobmanager"
-    namespace = "flink"
+    namespace = var.namespace
 
     annotations = {
       "prometheus.io/port" = "9249"
@@ -160,13 +160,13 @@ resource "kubernetes_service" "flink_jobmanager" {
 }
 
 resource "kubernetes_deployment" "flink_jobmanager" {
-  depends_on = [ 
+  depends_on = [
     "kubernetes_config_map.flink_config"
   ]
 
   metadata {
     name      = "flink-jobmanager"
-    namespace = "flink"
+    namespace = var.namespace
   }
 
   spec {
@@ -212,7 +212,7 @@ resource "kubernetes_deployment" "flink_jobmanager" {
           name  = "jobmanager"
           image = "apache/flink:1.13.0-scala_2.11"
           # The following args overwrite the value of jobmanager.rpc.address configured in the configuration config map to POD_IP.
-          args  = ["jobmanager"]
+          args = ["jobmanager"]
 
           env {
             name = "POD_IP"
@@ -275,7 +275,7 @@ resource "kubernetes_service" "flink_taskmanager_query_state" {
 
   metadata {
     name      = "flink-taskmanager-query-state"
-    namespace = "flink"
+    namespace = var.namespace
   }
 
   spec {
@@ -303,7 +303,7 @@ resource "kubernetes_service" "flink_taskmanager" {
 
   metadata {
     name      = "flink-taskmanager"
-    namespace = "flink"
+    namespace = var.namespace
 
     annotations = {
       "prometheus.io/port" = "9249"
@@ -335,7 +335,7 @@ resource "kubernetes_deployment" "flink_taskmanager" {
 
   metadata {
     name      = "flink-taskmanager"
-    namespace = "flink"
+    namespace = var.namespace
   }
 
   spec {
@@ -397,6 +397,16 @@ resource "kubernetes_deployment" "flink_taskmanager" {
             container_port = 9249
           }
 
+          resources {
+            limits = {
+              cpu = "500m"
+            }
+
+            requests = {
+              cpu = "200m"
+            }
+          }          
+
           volume_mount {
             name       = "flink-config-volume"
             mount_path = "/opt/flink/conf/"
@@ -420,3 +430,25 @@ resource "kubernetes_deployment" "flink_taskmanager" {
   }
 }
 
+resource "kubernetes_horizontal_pod_autoscaler" "flink_taskmanager" {
+  depends_on = [
+    "kubernetes_deployment.flink_taskmanager"
+  ]
+
+  metadata {
+    name      = "flink-taskmanager"
+    namespace = var.namespace
+  }
+
+  spec {
+    scale_target_ref {
+      kind        = "Deployment"
+      name        = "flink-taskmanager"
+      api_version = "apps/v1"
+    }
+
+    min_replicas                      = 3
+    max_replicas                      = 10
+    target_cpu_utilization_percentage = 50
+  }
+}

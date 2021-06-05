@@ -1,13 +1,13 @@
 resource "kubernetes_namespace" "prometheus_namespace" {
   metadata {
-    name = "prometheus"
+    name = var.namespace
   }
 }
 
 resource "kubernetes_config_map" "prometheus_cm" {
   metadata {
     name      = "prometheus-cm"
-    namespace = "prometheus"
+    namespace = var.namespace
   }
 
   data = {
@@ -300,7 +300,7 @@ resource "kubernetes_cluster_role_binding" "prometheus" {
   subject {
     kind      = "ServiceAccount"
     name      = "prometheus-k8s"
-    namespace = "prometheus"
+    namespace = var.namespace
   }
 
   role_ref {
@@ -336,14 +336,14 @@ resource "kubernetes_cluster_role" "prometheus" {
 resource "kubernetes_service_account" "prometheus_k_8_s" {
   metadata {
     name      = "prometheus-k8s"
-    namespace = "prometheus"
+    namespace = var.namespace
   }
 }
 
 resource "kubernetes_deployment" "prometheus_server" {
   metadata {
     name      = "prometheus-server"
-    namespace = "prometheus"
+    namespace = var.namespace
 
     labels = {
       app = "prometheus"
@@ -399,7 +399,7 @@ resource "kubernetes_deployment" "prometheus_server" {
 resource "kubernetes_service" "prometheus" {
   metadata {
     name      = "prometheus"
-    namespace = "prometheus"
+    namespace = var.namespace
   }
 
   spec {

@@ -36,6 +36,11 @@ spec:
           mountPath: /opt/flink/conf/
         securityContext:
           runAsUser: 9999  # refers to user _flink_ from official flink image, change if necessary
+        resources:
+          limits:
+            cpu: 500m
+          requests:
+            cpu: 200m
       volumes:
       - name: flink-config-volume
         configMap:
