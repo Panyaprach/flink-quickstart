@@ -1,6 +1,6 @@
 #!/bin/sh
 namespace=$1
-echo "Restarting Deployments in $namespace"
+echo "Restarting Deployments in '$namespace' namespace"
 if [ -n namespace ]
 then
     deploys=`kubectl get deployments -n $namespace | tail -n1 | cut -d ' ' -f 1`
