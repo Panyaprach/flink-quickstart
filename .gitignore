@@ -1,3 +1,4 @@
+### Maven ###
 target/
 pom.xml.tag
 pom.xml.releaseBackup
@@ -10,4 +11,25 @@ buildNumber.properties
 # https://github.com/takari/maven-wrapper#usage-without-binary-jar
 .mvn/wrapper/maven-wrapper.jar
 
+### NetBeans ###
+/nbproject/private/
+/build/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### IntelliJ IDEA ###
 .idea
+*.iws
+*.iml
+*.ipr
+
+### Terraform ###
+**/*.tfstate
+**/*.tfstate.backup
+**/.terraform
+**/.terraform.lock.hcl
+
+### Visual Studio Code ###
+.vscode
