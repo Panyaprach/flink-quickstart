@@ -21,6 +21,11 @@ data:
     metrics.reporter.prom.class: org.apache.flink.metrics.prometheus.PrometheusReporter
     metrics.reporter.prom.port: 9249-9260
 
+    # HA
+    kubernetes.cluster-id: minikube
+    high-availability: org.apache.flink.kubernetes.highavailability.KubernetesHaServicesFactory
+    high-availability.storageDir: s3:///flink/recovery
+
   log4j-console.properties: |+
     # This affects logging for both user code and Flink
     rootLogger.level = INFO

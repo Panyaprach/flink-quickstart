@@ -4,7 +4,7 @@ metadata:
   namespace: flink
   name: flink-jobmanager
 spec:
-  replicas: 1 # Set the value to greater than 1 to start standby JobManagers
+  replicas: 3 # Set the value to greater than 1 to start standby JobManagers
   selector:
     matchLabels:
       app: flink

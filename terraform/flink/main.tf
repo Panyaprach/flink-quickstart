@@ -405,7 +405,7 @@ resource "kubernetes_deployment" "flink_taskmanager" {
             requests = {
               cpu = "200m"
             }
-          }          
+          }
 
           volume_mount {
             name       = "flink-config-volume"

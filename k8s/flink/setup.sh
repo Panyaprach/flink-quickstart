@@ -7,7 +7,7 @@ kubectl create -f jobmanager-service.yaml
 
 kubectl create -f jobmanager-rest-service.yaml
 
-kubectl create -f jobmanager-session-deployment-non-ha.yaml
+kubectl create -f jobmanager-session-deployment-ha.yaml
 
 kubectl create -f taskmanager-session-deployment.yaml
 
