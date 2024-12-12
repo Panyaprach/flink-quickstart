@@ -3,6 +3,8 @@ kubectl create ns flink
 
 kubectl create -f flink-configuration-configmap.yaml
 
+kubectl create -f flink-service-account.yaml
+
 kubectl create -f jobmanager-service.yaml
 
 kubectl create -f jobmanager-rest-service.yaml
